@@ -6,14 +6,16 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.http.ResponseEntity
 
 import java.io.FileOutputStream
+import java.util.UUID
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 class ImageController {
 
-    @PostMapping("/image")
-    fun upload(file: MultipartFile): ResponseEntity<String> {
-        val path = "src/main/resources"
-        val name = "aaa"
+    @PostMapping("/upload")
+    fun upload(file: MultipartFile, request: HttpServletRequest): ResponseEntity<String> {
+        val dir = "src/main/resources/static"
+        val name = UUID.randomUUID().toString()
         val ext = when (file.contentType) {
             "image/png" -> "png"
             "image/jpeg" -> "jpg"
@@ -21,8 +23,9 @@ class ImageController {
                 "content type '${file.contentType}' is invalid."
             )
         }
-        FileOutputStream("${path}/${name}.${ext}").write(file.getBytes())
-        return ResponseEntity.ok(name)
+        FileOutputStream("${dir}/${name}.${ext}").write(file.getBytes())
+        val url = request.requestURL.toString().replace("/upload", "")
+        return ResponseEntity.ok("${url}/${name}.${ext}")
     }
 
 }
