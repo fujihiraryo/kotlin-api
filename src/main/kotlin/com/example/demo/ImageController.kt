@@ -23,7 +23,7 @@ class ImageController {
                 "content type '${file.contentType}' is invalid."
             )
         }
-        FileOutputStream("${dir}/${name}.${ext}").write(file.getBytes())
+        FileOutputStream("${dir}/${name}.${ext}").write(file.bytes)
         val url = request.requestURL.toString().replace("/upload", "")
         return ResponseEntity.ok("${url}/${name}.${ext}")
     }
